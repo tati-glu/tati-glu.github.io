@@ -1,10 +1,55 @@
 <!DOCTYPE html>
-<html>
-<head> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="facebook-domain-verification" content="ck7rg2kleuzi4u2mm8285c521lkgdo" />
+    <title>Online Course Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background-color: #007BFF;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-<h1>Hello World</h1>
-<p>Я не знаю, а что ты хочешь?</p>
+    <div id="page1" class="container">
+        <h1>Welcome to the Online Course</h1>
+        <p>This course is designed to help you enhance your skills and achieve your goals. Sign up now to get started!</p>
+        <a href="#page2" class="button">Sign Up</a>
+    </div>
+
+    <div id="page2" class="container" style="display: none;">
+        <h1>Thank You for Signing Up!</h1>
+        <p>We appreciate your interest. Stay tuned for more information about the course.</p>
+    </div>
+
+    <script>
+        document.querySelector('.button').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'block';
+        });
+    </script>
 </body>
 </html>
