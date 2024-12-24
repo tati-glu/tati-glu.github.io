@@ -58,21 +58,30 @@
                     <input type="number" id="quantity" min="1" value="1">
                     <button onclick="addToCart(${id})">Add to Cart</button>
                 </div>
-                <button onclick="location.reload()">Back to Shop</button>
+                <button onclick="loadProducts()">Back to Shop</button>
             `;
         }
 
         function addToCart(id) {
             const quantity = parseInt(document.getElementById('quantity').value);
-            cart.push({ ...products[id], quantity });
-            alert('Added to cart');
-            location.reload();
+            if (quantity > 0) {
+                const existingProductIndex = cart.findIndex(item => item.title === products[id].title);
+                if (existingProductIndex > -1) {
+                    cart[existingProductIndex].quantity += quantity;
+                } else {
+                    cart.push({ ...products[id], quantity });
+                }
+                alert('Added to cart');
+                loadProducts();
+            } else {
+                alert('Please enter a valid quantity.');
+            }
         }
 
         function viewCart() {
             document.body.innerHTML = '<header><h1>Your Cart</h1></header>';
             if (cart.length === 0) {
-                document.body.innerHTML += '<p>Your cart is empty.</p><button onclick="location.reload()">Back to Shop</button>';
+                document.body.innerHTML += '<p>Your cart is empty.</p><button onclick="loadProducts()">Back to Shop</button>';
                 return;
             }
             cart.forEach((item, index) => {
@@ -86,7 +95,7 @@
                     </div>
                 `;
             });
-            document.body.innerHTML += '<button onclick="purchase()">Buy</button>';
+            document.body.innerHTML += '<button onclick="purchase()">Buy</button><button onclick="loadProducts()">Back to Shop</button>';
         }
 
         function removeFromCart(index) {
@@ -95,7 +104,8 @@
         }
 
         function purchase() {
-            document.body.innerHTML = '<header><h1>Thank you for your purchase!</h1></header>';
+            document.body.innerHTML = '<header><h1>Thank you for your purchase!</h1></header><button onclick="loadProducts()">Back to Shop</button>';
+            cart.length = 0;
         }
 
         const products = [
@@ -117,17 +127,18 @@
             {
                 title: "Веришь - существует",
                 description: "Футболка с оригинальным сердцем и вдохновляющей цитатой.",
-                image: "https://standard.gdebirka.ru/pi/manshortfull/500/32/p3151697.webp"
+                image: "https://8-text.ru/wp-content/uploads/2022/03/8text_believe_myself.jpg"
             },
             {
                 title: "Душа Моя",
                 description: "Футболка с минималистичным дизайном сердца.",
-                image: "https://i0.wp.com/tipoprint.ru/wp-content/uploads/2020/06/Футболка-Верь-в-чудеса-так-интереснее-жить-Белая.jpg?fit=770%2C1000&ssl=1"
+                image: "https://mywishboard.com/media/catalog/wish/futbolka-moia-dusa-koten-5319804.jpg"
             }
         ];
 
         function loadProducts() {
             const container = document.getElementById('products');
+            container.innerHTML = '';
             products.forEach((product, index) => {
                 container.innerHTML += `
                     <div class="product">
@@ -143,24 +154,6 @@
 
         document.addEventListener('DOMContentLoaded', loadProducts);
     </script>
- <meta name="facebook-domain-verification" content="cc54ohgn5myb4fvdwbxc0iht73b68c" />
- <!-- Meta Pixel Code -->
-<script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1134741614732951');
-    fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1134741614732951&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code -->   
 </head>
 <body>
     <header>
