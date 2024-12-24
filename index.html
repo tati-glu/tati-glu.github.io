@@ -11,91 +11,166 @@
             padding: 0;
             background-color: #f4f4f9;
         }
-        header {
-            background: #333;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
         .product {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px;
-            text-align: center;
-            background: #fff;
             display: inline-block;
-            width: 200px;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
         }
         .product img {
-            max-width: 100%;
+            max-width: 150px;
+            height: auto;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            text-decoration: none;
             border-radius: 5px;
         }
-        .product button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            border: none;
-            background: #333;
-            color: white;
-            cursor: pointer;
-        }
-        .product button:hover {
-            background: #555;
+        .button:hover {
+            background-color: #0056b3;
         }
     </style>
+</head>
+<body>
+    <div id="products-page" class="container">
+        <h1>T-Shirt Shop</h1>
+        <div id="product-list"></div>
+        <button onclick="viewCart()" class="button">View Cart</button>
+    </div>
+
+    <div id="product-details-page" class="container" style="display: none;">
+        <h1 id="product-title"></h1>
+        <img id="product-image" src="" alt="">
+        <p id="product-description"></p>
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" value="1" min="1">
+        <button id="add-to-cart" class="button">Add to Cart</button>
+        <button onclick="showProducts()" class="button">Back to Products</button>
+    </div>
+
+    <div id="cart-page" class="container" style="display: none;">
+        <h1>Your Cart</h1>
+        <ul id="cart-items"></ul>
+        <button onclick="purchase()" class="button">Checkout</button>
+        <button onclick="showProducts()" class="button">Back to Products</button>
+    </div>
+
+    <div id="thank-you-page" class="container" style="display: none;">
+        <h1>Thank You for Your Purchase!</h1>
+        <button onclick="showProducts()" class="button">Back to Shop</button>
+    </div>
+
     <script>
+        const products = [
+            {
+                id: 1,
+                title: "Любовь - это ...",
+                image: "https://техно-сувенир.рф/wp-content/uploads/2021/01/Futbolka-belayalyubov-eto-videt-smysl-zhizni-v-glazah-drug-druga.jpg",
+                description: "Белая футболка с оригинальной цитатой и стильным дизайном."
+            },
+            {
+                id: 2,
+                title: "LegnA",
+                image: "https://media.symbol.ua/aio-images/11/e5/11e5900eeb690e4f986084346f771f77/275ee90b-546d-4f9a-a65f-c17a478e7b9a.jpg",
+                description: "Дизайн с мечом и оригинальной графикой."
+            },
+            {
+                id: 3,
+                title: "Король Бубен",
+                image: "https://dreamshirts.ru/media/catalog/product/cache/1/image/1200x1200/9df78eab33525d08d6e5fb8d27136e95/a/m/am0_eb0_et0_lm0_ms0_king_lion_timon_pumbaa_0011_man__copy.jpg",
+                description: "Интересный принт с карточной темой."
+            },
+            {
+                id: 4,
+                title: "Веришь - существует",
+                image: "https://8-text.ru/wp-content/uploads/2022/03/8text_believe_myself.jpg",
+                description: "Футболка с оригинальным сердцем и вдохновляющей цитатой."
+            },
+            {
+                id: 5,
+                title: "Душа Моя",
+                image: "https://mywishboard.com/media/catalog/wish/futbolka-moia-dusa-koten-5319804.jpg",
+                description: "Футболка с минималистичным дизайном сердца."
+            }
+        ];
+
         const cart = [];
 
-        function viewProduct(id) {
-            const product = products[id];
-            document.body.innerHTML = `
-                <header>
-                    <h1>${product.title}</h1>
-                </header>
-                <div style="text-align:center; margin: 20px;">
-                    <img src="${product.image}" alt="${product.title}" style="max-width:300px;">
-                    <p>${product.description}</p>
-                    <input type="number" id="quantity" min="1" value="1">
-                    <button onclick="addToCart(${id})">Add to Cart</button>
-                </div>
-                <button onclick="loadProducts()">Back to Shop</button>
-            `;
+        function showProducts() {
+            document.getElementById('products-page').style.display = 'block';
+            document.getElementById('product-details-page').style.display = 'none';
+            document.getElementById('cart-page').style.display = 'none';
+            document.getElementById('thank-you-page').style.display = 'none';
+
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+            products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                productDiv.innerHTML = `
+                    <img src="${product.image}" alt="${product.title}">
+                    <h2>${product.title}</h2>
+                    <button onclick="viewProduct(${product.id})" class="button">View Details</button>
+                `;
+                productList.appendChild(productDiv);
+            });
         }
 
-        function addToCart(id) {
+        function viewProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            document.getElementById('products-page').style.display = 'none';
+            document.getElementById('product-details-page').style.display = 'block';
+            document.getElementById('product-title').textContent = product.title;
+            document.getElementById('product-image').src = product.image;
+            document.getElementById('product-description').textContent = product.description;
+            document.getElementById('add-to-cart').onclick = () => addToCart(productId);
+        }
+
+        function addToCart(productId) {
             const quantity = parseInt(document.getElementById('quantity').value);
             if (quantity > 0) {
-                const existingProductIndex = cart.findIndex(item => item.title === products[id].title);
-                if (existingProductIndex > -1) {
-                    cart[existingProductIndex].quantity += quantity;
+                const product = products.find(p => p.id === productId);
+                const cartItem = cart.find(item => item.id === productId);
+                if (cartItem) {
+                    cartItem.quantity += quantity;
                 } else {
-                    cart.push({ ...products[id], quantity });
+                    cart.push({ ...product, quantity });
                 }
-                alert('Added to cart');
-                loadProducts();
+                alert('Product added to cart');
+                showProducts();
             } else {
                 alert('Please enter a valid quantity.');
             }
         }
 
         function viewCart() {
-            document.body.innerHTML = '<header><h1>Your Cart</h1></header>';
-            if (cart.length === 0) {
-                document.body.innerHTML += '<p>Your cart is empty.</p><button onclick="loadProducts()">Back to Shop</button>';
-                return;
-            }
+            document.getElementById('products-page').style.display = 'none';
+            document.getElementById('product-details-page').style.display = 'none';
+            document.getElementById('cart-page').style.display = 'block';
+            document.getElementById('thank-you-page').style.display = 'none';
+
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
             cart.forEach((item, index) => {
-                document.body.innerHTML += `
-                    <div class="product">
-                        <h3>${item.title}</h3>
-                        <img src="${item.image}" alt="${item.title}">
-                        <p>${item.description}</p>
-                        <p>Quantity: ${item.quantity}</p>
-                        <button onclick="removeFromCart(${index})">Remove</button>
-                    </div>
-                `;
+                const li = document.createElement('li');
+                li.textContent = `${item.title} - Quantity: ${item.quantity}`;
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.onclick = () => removeFromCart(index);
+                li.appendChild(removeButton);
+                cartItems.appendChild(li);
             });
-            document.body.innerHTML += '<button onclick="purchase()">Buy</button><button onclick="loadProducts()">Back to Shop</button>';
         }
 
         function removeFromCart(index) {
@@ -104,63 +179,14 @@
         }
 
         function purchase() {
-            document.body.innerHTML = '<header><h1>Thank you for your purchase!</h1></header><button onclick="loadProducts()">Back to Shop</button>';
+            document.getElementById('products-page').style.display = 'none';
+            document.getElementById('product-details-page').style.display = 'none';
+            document.getElementById('cart-page').style.display = 'none';
+            document.getElementById('thank-you-page').style.display = 'block';
             cart.length = 0;
         }
 
-        const products = [
-            {
-                title: "Любовь - это ...",
-                description: "Белая футболка с оригинальной цитатой и стильным дизайном.",
-                image: "https://техно-сувенир.рф/wp-content/uploads/2021/01/Futbolka-belayalyubov-eto-videt-smysl-zhizni-v-glazah-drug-druga.jpg"
-            },
-            {
-                title: "LegnA",
-                description: "Дизайн с мечом и оригинальной графикой.",
-                image: "https://media.symbol.ua/aio-images/11/e5/11e5900eeb690e4f986084346f771f77/275ee90b-546d-4f9a-a65f-c17a478e7b9a.jpg"
-            },
-            {
-                title: "Король Бубен",
-                description: "Интересный принт с карточной темой.",
-                image: "https://dreamshirts.ru/media/catalog/product/cache/1/image/1200x1200/9df78eab33525d08d6e5fb8d27136e95/a/m/am0_eb0_et0_lm0_ms0_king_lion_timon_pumbaa_0011_man__copy.jpg"
-            },
-            {
-                title: "Веришь - существует",
-                description: "Футболка с оригинальным сердцем и вдохновляющей цитатой.",
-                image: "https://8-text.ru/wp-content/uploads/2022/03/8text_believe_myself.jpg"
-            },
-            {
-                title: "Душа Моя",
-                description: "Футболка с минималистичным дизайном сердца.",
-                image: "https://mywishboard.com/media/catalog/wish/futbolka-moia-dusa-koten-5319804.jpg"
-            }
-        ];
-
-        function loadProducts() {
-            const container = document.getElementById('products');
-            container.innerHTML = '';
-            products.forEach((product, index) => {
-                container.innerHTML += `
-                    <div class="product">
-                        <h3>${product.title}</h3>
-                        <img src="${product.image}" alt="${product.title}">
-                        <p>${product.description}</p>
-                        <button onclick="viewProduct(${index})">View</button>
-                    </div>
-                `;
-            });
-            container.innerHTML += '<button onclick="viewCart()">View Cart</button>';
-        }
-
-        document.addEventListener('DOMContentLoaded', loadProducts);
+        document.addEventListener('DOMContentLoaded', showProducts);
     </script>
-</head>
-<body>
-    <header>
-        <h1>Welcome to Our T-Shirt Shop</h1>
-    </header>
-    <div id="products" style="display: flex; flex-wrap: wrap; justify-content: center;">
-        <!-- Products will be dynamically loaded here -->
-    </div>
 </body>
 </html>
